@@ -398,3 +398,15 @@ char* ll_getData(LinkedListPtr list)
 
     return list_getData(list->currentNode);
 }
+
+// Return index of current node
+int ll_getIndex(LinkedListPtr list)
+{
+    return list->listIndex;
+}
+
+// Return current size of list
+int ll_getSize(LinkedListPtr list)
+{
+    return list->listSize;
+}

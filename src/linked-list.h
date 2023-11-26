@@ -44,4 +44,10 @@ void ll_removeNode(LinkedListPtr list);
 // Return data of current node
 char* ll_getData(LinkedListPtr list);
 
+// Return index of current node
+int ll_getIndex(LinkedListPtr list);
+
+// Return current size of list
+int ll_getSize(LinkedListPtr list);
+
 #endif
