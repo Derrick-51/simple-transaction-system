@@ -255,7 +255,7 @@ void ll_deleteList(LinkedListPtr* list)
     if(!(*list)->currentNode)
     {
         printf("Cannot delete empty list\n");
-        return RETURN_FAILURE;
+        return;
     }
 
     list_clearList((*list)->currentNode);
