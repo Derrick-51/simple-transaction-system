@@ -1,18 +1,8 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-struct ListNode;
-
-typedef struct ListNode* NodePtr;
+typedef struct ListNode* ListNodePtr;
 typedef struct LinkedList* LinkedListPtr;
-
-struct LinkedList
-{
-    NodePtr currentNode;
-    int listIndex;
-    int listSize;
-    int dataBufferSize;
-};
 
 // Creates linked-list with given data buffer size
 LinkedListPtr ll_createList(int bufferSize);

@@ -13,6 +13,14 @@ struct ListNode
     char* data;
 };
 
+struct LinkedList
+{
+    ListNodePtr currentNode;
+    int listIndex;
+    int listSize;
+    int dataBufferSize;
+};
+
 struct ListNode* list_createList()
 {
     struct ListNode* list = malloc(sizeof(struct ListNode));
@@ -304,7 +312,7 @@ void ll_gotoBack(LinkedListPtr list)
         printf("Cannot traverse empty list\n");
         return;
     }
-    
+
     list->currentNode = list_gotoBack(list->currentNode);
     list->listIndex = list->listSize - 1;
 }
