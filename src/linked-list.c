@@ -63,6 +63,7 @@ struct ListNode* list_setData(struct ListNode* node, char* newData, int bufferSi
 struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int bufferSize)
 {
     struct ListNode* newNode = malloc(sizeof(struct ListNode));
+    newNode = list_setData(newNode, newData, bufferSize);
 
     // Empty list
     if(!node)
@@ -84,8 +85,6 @@ struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int buff
     newNode->next = pushedNode;
     pushedNode->prev = newNode;
 
-    newNode = list_setData(newNode, newData, bufferSize);
-
     return newNode;
 }
 
@@ -94,6 +93,7 @@ struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int buff
 struct ListNode* list_insertBefore(struct ListNode* node, char* newData, int bufferSize)
 {
     struct ListNode* newNode = malloc(sizeof(struct ListNode));
+    newNode = list_setData(newNode, newData, bufferSize);
 
     // Empty list
     if(!node)
@@ -114,8 +114,6 @@ struct ListNode* list_insertBefore(struct ListNode* node, char* newData, int buf
     newNode->next = node;
     newNode->prev = pushedNode;
     pushedNode->next = newNode;
-
-    newNode = list_setData(newNode, newData, bufferSize);
 
     return newNode;
 }

@@ -39,7 +39,7 @@ int main()
     printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
     printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
 
-    printf("\nInsert after \"another long data to overflow buffers\"\n");
+    printf("\nInsert before \"another long data to overflow buffers\"\n");
     char* data3 = "another long data to overflow buffers";
     ll_insertBefore(list2, data3);
     ll_insertBefore(list3, data3);
@@ -103,10 +103,10 @@ int main()
     printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
 
     printf("\nGo to back\n");
-    ll_gotoFront(list2);
-    ll_gotoFront(list3);
-    ll_gotoFront(list4);
-    ll_gotoFront(list5);
+    ll_gotoBack(list2);
+    ll_gotoBack(list3);
+    ll_gotoBack(list4);
+    ll_gotoBack(list5);
     printf("list2(buffer: 2) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list2), ll_getSize(list2), ll_getData(list2));
     printf("list2(buffer: 8) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list3), ll_getSize(list3), ll_getData(list3));
     printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
@@ -146,10 +146,10 @@ int main()
     printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
 
     printf("\nGo to back\n");
-    ll_gotoFront(list2);
-    ll_gotoFront(list3);
-    ll_gotoFront(list4);
-    ll_gotoFront(list5);
+    ll_gotoBack(list2);
+    ll_gotoBack(list3);
+    ll_gotoBack(list4);
+    ll_gotoBack(list5);
     printf("list2(buffer: 2) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list2), ll_getSize(list2), ll_getData(list2));
     printf("list2(buffer: 8) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list3), ll_getSize(list3), ll_getData(list3));
     printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
