@@ -45,13 +45,11 @@ char* list_getData(struct ListNode* node)
 // Allocates and sets list node data
 struct ListNode* list_setData(struct ListNode* node, char* newData, int bufferSize)
 {
-    if(node->data)
+    if(!(node->data))
     {
-        free(node->data);
-        node->data = NULL;
+        node->data = malloc(sizeof(char) * bufferSize);
     }
 
-    node->data = malloc(sizeof(char) * bufferSize);
     strncpy(node->data, newData, bufferSize - 1);
     node->data[bufferSize - 1] = '\0';
 
@@ -72,7 +70,7 @@ struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int buff
     }
 
     // Insert at back of list
-    if(!node->next)
+    if(!(node->next))
     {
         node->next = newNode;
         newNode->prev = node;
@@ -102,7 +100,7 @@ struct ListNode* list_insertBefore(struct ListNode* node, char* newData, int buf
     }
 
     // Insert at front of list
-    if(!node->prev)
+    if(!(node->prev))
     {
         node->prev = newNode;
         newNode->next = node;
@@ -179,9 +177,19 @@ struct ListNode* list_gotoFront(struct ListNode* node)
 // ListIndexShift is the value that is used to shift the list index
 struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
 {
+    if(!node)
+    {
+        printf("Cannot remove node in empty list\n");
+        return NULL;
+    }
+
     struct ListNode* prevNode = node->prev;
     struct ListNode* nextNode = node->next;
 
+    if(node->data)
+    {
+        free(node->data);
+    }
     free(node);
 
     if(prevNode && nextNode)
@@ -242,7 +250,7 @@ LinkedListPtr ll_createList(int dataBufferSize)
 // Only deallocates nodes of list
 void ll_clearList(LinkedListPtr list)
 {
-    list_clearList(list->currentNode);
+    list->currentNode = list_clearList(list->currentNode);
     list->listIndex = -1;
     list->listSize = 0;
 }
@@ -250,13 +258,11 @@ void ll_clearList(LinkedListPtr list)
 // Clears and deallocates linked-list entirely
 void ll_deleteList(LinkedListPtr* list)
 {
-    if(!(*list)->currentNode)
+    if((*list)->currentNode)
     {
-        printf("Cannot delete empty list\n");
-        return;
+        list_clearList((*list)->currentNode);
     }
 
-    list_clearList((*list)->currentNode);
     free(*list);
     *list = NULL;
 }
@@ -333,6 +339,12 @@ void ll_gotoFront(LinkedListPtr list)
 // Current node will point to new node after insertion
 void ll_insertAfter(LinkedListPtr list, char* newData)
 {
+    if(!newData)
+    {
+        printf("Cannot insert null data string\n");
+        return;
+    }
+
     list->currentNode = list_insertAfter(list->currentNode, newData, list->dataBufferSize);
     list->listIndex += 1;
     list->listSize += 1;
@@ -342,6 +354,12 @@ void ll_insertAfter(LinkedListPtr list, char* newData)
 // Current node will point to new node after insertion
 void ll_insertBefore(LinkedListPtr list, char* newData)
 {
+    if(!newData)
+    {
+        printf("Cannot insert null data string\n");
+        return;
+    }
+
     if(!list->currentNode)
     {
         list->currentNode = list_insertBefore(list->currentNode, newData, list->dataBufferSize);
@@ -357,6 +375,12 @@ void ll_insertBefore(LinkedListPtr list, char* newData)
 // Replace only the data in the current node
 void ll_replaceData(LinkedListPtr list, char* newData)
 {
+    if(!newData)
+    {
+        printf("Cannot replace with null data string\n");
+        return;
+    }
+
     if(!list->currentNode)
     {
         printf("Cannot replace data in empty list\n");
