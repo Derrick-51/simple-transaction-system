@@ -10,7 +10,8 @@ int main()
     LinkedListPtr list4 = ll_createList(16);
     LinkedListPtr list5 = ll_createList(128);
 
-    if(list1) printf("Failed buffer size > 1 requirment \n");
+    if(list1) printf("Failed buffer size > 1 requirment \n\n");
+    else printf("Passed buffer size > 1 requirment \n\n");
 
     printf("list2(buffer: 2) Index: %d Size: %d\n", ll_getIndex(list2), ll_getSize(list2));
     printf("list2(buffer: 8) Index: %d Size: %d\n", ll_getIndex(list3), ll_getSize(list3));
@@ -80,6 +81,16 @@ int main()
     printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
     printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
 
+    printf("\nGo to previous [BOUNDS CHECK]\n");
+    ll_gotoPrev(list2);
+    ll_gotoPrev(list3);
+    ll_gotoPrev(list4);
+    ll_gotoPrev(list5);
+    printf("list2(buffer: 2) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list2), ll_getSize(list2), ll_getData(list2));
+    printf("list2(buffer: 8) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list3), ll_getSize(list3), ll_getData(list3));
+    printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
+    printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
+
     printf("\nInsert before \"small data\"\n");
     char* data4 = "small data";
     ll_insertBefore(list2, data4);
@@ -107,6 +118,16 @@ int main()
     ll_gotoBack(list3);
     ll_gotoBack(list4);
     ll_gotoBack(list5);
+    printf("list2(buffer: 2) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list2), ll_getSize(list2), ll_getData(list2));
+    printf("list2(buffer: 8) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list3), ll_getSize(list3), ll_getData(list3));
+    printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
+    printf("list2(buffer: 128) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list5), ll_getSize(list5), ll_getData(list5));
+
+    printf("\nGo to next [BOUNDS CHECK]\n");
+    ll_gotoNext(list2);
+    ll_gotoNext(list3);
+    ll_gotoNext(list4);
+    ll_gotoNext(list5);
     printf("list2(buffer: 2) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list2), ll_getSize(list2), ll_getData(list2));
     printf("list2(buffer: 8) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list3), ll_getSize(list3), ll_getData(list3));
     printf("list2(buffer: 16) Index: %d Size: %d Data: \"%s\"\n", ll_getIndex(list4), ll_getSize(list4), ll_getData(list4));
@@ -204,5 +225,8 @@ int main()
     {
         printf("Failed list delete\n");
     }
-
+    else
+    {
+        printf("Passed list delete\n");
+    }
 }
