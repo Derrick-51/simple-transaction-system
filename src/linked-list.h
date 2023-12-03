@@ -38,8 +38,12 @@ void ll_insertBefore(LinkedListPtr list, char* newData);
 void ll_replaceData(LinkedListPtr list, char* newData);
 
 // Removes the current node
-// Shifts current node once toward the front of list
+// Shifts index toward the front of list
 void ll_removeNode(LinkedListPtr list);
+
+// Removes the current node
+// Keeps index the same, and shifts toward front when deleting from back
+void ll_deleteNode(LinkedListPtr list);
 
 // Return data of current node
 char* ll_getData(LinkedListPtr list);

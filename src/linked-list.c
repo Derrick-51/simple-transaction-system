@@ -175,6 +175,7 @@ struct ListNode* list_gotoFront(struct ListNode* node)
 }
 
 // ListIndexShift is the value that is used to shift the list index
+// Index shifts left after removal
 struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
 {
     if(!node)
@@ -198,6 +199,51 @@ struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
         nextNode->prev = prevNode;
         *listIndexShift = -1;
         return prevNode;
+    }
+
+    if(prevNode)
+    {
+        prevNode->next = NULL;
+        *listIndexShift = -1;
+        return prevNode;
+    }
+
+    if(nextNode)
+    {
+        nextNode->prev = NULL;
+        *listIndexShift = 0;
+        return nextNode;
+    }
+
+    // List is now empty
+    return NULL;
+}
+
+// ListIndexShift is the value that is used to shift the list index
+// Index remains the same after deletion unless at end of list
+struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
+{
+    if(!node)
+    {
+        printf("Cannot remove node in empty list\n");
+        return NULL;
+    }
+
+    struct ListNode* prevNode = node->prev;
+    struct ListNode* nextNode = node->next;
+
+    if(node->data)
+    {
+        free(node->data);
+    }
+    free(node);
+
+    if(prevNode && nextNode)
+    {
+        prevNode->next = nextNode;
+        nextNode->prev = prevNode;
+        *listIndexShift = 0;
+        return nextNode;
     }
 
     if(prevNode)
@@ -391,7 +437,7 @@ void ll_replaceData(LinkedListPtr list, char* newData)
 }
 
 // Removes the current node
-// Shifts current node once toward the front of list
+// Shifts index once toward the front of list
 void ll_removeNode(LinkedListPtr list)
 {
     int listIndexShift = 0;
@@ -405,7 +451,27 @@ void ll_removeNode(LinkedListPtr list)
         return;
     }
 
-    // Current index either shifts left or remains the same after removal
+    // Current index shifts toward front of list
+    list->listIndex += listIndexShift;
+    list->listSize -= 1;
+}
+
+// Removes the current node
+// Keeps index the same, and shifts toward front when deleting from back
+void ll_deleteNode(LinkedListPtr list)
+{
+    int listIndexShift = 0;
+    list->currentNode = list_deleteNode(list->currentNode, &listIndexShift);
+
+    // Empty list
+    if(!list->currentNode)
+    {
+        list->listIndex = -1;
+        list->listSize = 0;
+        return;
+    }
+
+    // Current index shifts toward front only when deleting from back
     list->listIndex += listIndexShift;
     list->listSize -= 1;
 }
