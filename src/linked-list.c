@@ -22,17 +22,7 @@ struct LinkedList
     int dataBufferSize;
 };
 
-struct ListNode* list_createList()
-{
-    struct ListNode* list = malloc(sizeof(struct ListNode));
-    list->next = NULL;
-    list->prev = NULL;
-    list->data = NULL;
-
-    return list;
-}
-
-char* list_getData(struct ListNode* node)
+char* list_getData(ListNodePtr node)
 {
     if(!node->data)
     {
@@ -43,24 +33,30 @@ char* list_getData(struct ListNode* node)
 }
 
 // Allocates and sets list node data
-struct ListNode* list_setData(struct ListNode* node, char* newData, int bufferSize)
+struct ListNode* list_setData(ListNodePtr node, char* newData, int bufferSize)
 {
-    if(!(node->data))
+    while(!node->data)
     {
         node->data = malloc(sizeof(char) * bufferSize);
     }
 
-    strncpy(node->data, newData, bufferSize - 1);
-    node->data[bufferSize - 1] = '\0';
+    //strncpy(node->data, newData, bufferSize - 1);
+    //(node->data)[bufferSize - 1] = '\0';
+    snprintf(node->data, bufferSize, "%s", newData);
 
     return node;
 }
 
 // Insert new node after current node
 // Returns new node
-struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int bufferSize)
+struct ListNode* list_insertAfter(ListNodePtr node, char* newData, int bufferSize)
 {
     struct ListNode* newNode = malloc(sizeof(struct ListNode));
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    // Without initializing data, new node may be allocated with old node address 
+    // leading to errors when inserting after deletion
+    newNode->data = NULL;
     newNode = list_setData(newNode, newData, bufferSize);
 
     // Empty list
@@ -88,9 +84,14 @@ struct ListNode* list_insertAfter(struct ListNode* node, char* newData, int buff
 
 // Insert new node before current node
 // Returns new node
-struct ListNode* list_insertBefore(struct ListNode* node, char* newData, int bufferSize)
+struct ListNode* list_insertBefore(ListNodePtr node, char* newData, int bufferSize)
 {
     struct ListNode* newNode = malloc(sizeof(struct ListNode));
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    // Without this, new node may be allocated with old address data
+    // leading to errors when inserting after deletion
+    newNode->data = NULL;
     newNode = list_setData(newNode, newData, bufferSize);
 
     // Empty list
@@ -117,7 +118,7 @@ struct ListNode* list_insertBefore(struct ListNode* node, char* newData, int buf
 }
 
 // Returns the next node of the list
-struct ListNode* list_gotoNext(struct ListNode* node)
+struct ListNode* list_gotoNext(ListNodePtr node)
 {
     // Empty list
     if(!node)
@@ -129,7 +130,7 @@ struct ListNode* list_gotoNext(struct ListNode* node)
 }
 
 // Returns the previous node of the list
-struct ListNode* list_gotoPrev(struct ListNode* node)
+struct ListNode* list_gotoPrev(ListNodePtr node)
 {
     // Empty list
     if(!node)
@@ -141,7 +142,7 @@ struct ListNode* list_gotoPrev(struct ListNode* node)
 }
 
 // Returns the back node of the list
-struct ListNode* list_gotoBack(struct ListNode* node)
+struct ListNode* list_gotoBack(ListNodePtr node)
 {
     // Empty list
     if(!node)
@@ -158,7 +159,7 @@ struct ListNode* list_gotoBack(struct ListNode* node)
 }
 
 // Returns the front node of the list
-struct ListNode* list_gotoFront(struct ListNode* node)
+struct ListNode* list_gotoFront(ListNodePtr node)
 {
     // Empty list
     if(!node)
@@ -176,7 +177,7 @@ struct ListNode* list_gotoFront(struct ListNode* node)
 
 // ListIndexShift is the value that is used to shift the list index
 // Index shifts left after removal
-struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
+struct ListNode* list_removeNode(ListNodePtr node, int* listIndexShift)
 {
     if(!node)
     {
@@ -191,8 +192,10 @@ struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
     {
         free(node->data);
     }
+
     free(node);
 
+    // Middle of list
     if(prevNode && nextNode)
     {
         prevNode->next = nextNode;
@@ -201,6 +204,7 @@ struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
         return prevNode;
     }
 
+    // Back of list
     if(prevNode)
     {
         prevNode->next = NULL;
@@ -208,6 +212,7 @@ struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
         return prevNode;
     }
 
+    // Front of list
     if(nextNode)
     {
         nextNode->prev = NULL;
@@ -221,7 +226,7 @@ struct ListNode* list_removeNode(struct ListNode* node, int* listIndexShift)
 
 // ListIndexShift is the value that is used to shift the list index
 // Index remains the same after deletion unless at end of list
-struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
+struct ListNode* list_deleteNode(ListNodePtr node, int* listIndexShift)
 {
     if(!node)
     {
@@ -236,8 +241,10 @@ struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
     {
         free(node->data);
     }
+
     free(node);
 
+    // Middle of list
     if(prevNode && nextNode)
     {
         prevNode->next = nextNode;
@@ -246,6 +253,7 @@ struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
         return nextNode;
     }
 
+    // Back of list
     if(prevNode)
     {
         prevNode->next = NULL;
@@ -253,6 +261,7 @@ struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
         return prevNode;
     }
 
+    // Front of list
     if(nextNode)
     {
         nextNode->prev = NULL;
@@ -264,7 +273,7 @@ struct ListNode* list_deleteNode(struct ListNode* node, int* listIndexShift)
     return NULL;
 }
 
-struct ListNode* list_clearList(struct ListNode* node)
+struct ListNode* list_clearList(ListNodePtr node)
 {
     node = list_gotoBack(node);
 
@@ -324,7 +333,6 @@ int ll_gotoNext(LinkedListPtr list)
 
     if(!list->currentNode->next)
     {
-        printf("Currently at end of list\n");
         return RETURN_FAILURE;
     }
 
@@ -345,7 +353,6 @@ int ll_gotoPrev(LinkedListPtr list)
 
     if(!list->currentNode->prev)
     {
-        printf("Currently at front of list\n");
         return RETURN_FAILURE;
     }
 
@@ -498,4 +505,9 @@ int ll_getIndex(LinkedListPtr list)
 int ll_getSize(LinkedListPtr list)
 {
     return list->listSize;
+}
+
+void ll_printListDebug(LinkedListPtr list)
+{
+    printf("Previous Node: %p\nCurrent Node: %p\nNext Node: %p\n\n", list->currentNode->prev, list->currentNode, list->currentNode->next);
 }
