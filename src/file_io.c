@@ -193,7 +193,7 @@ int file_filterColumnCondition(
     char* target, 
     conditionFunc conditionFunc)
 {
-    if(ll_getSize(rowList) < 2)
+    if(ll_getSize(rowList) < MIN_LIST_SIZE)
     {
         printf("Cannot filter empty list\n");
         return RETURN_FAILURE;
