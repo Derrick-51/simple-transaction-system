@@ -17,6 +17,8 @@ struct ListNode
 struct LinkedList
 {
     ListNodePtr currentNode;
+    ListNodePtr front;
+    ListNodePtr back;
     int listIndex;
     int listSize;
     int dataBufferSize;
@@ -141,6 +143,8 @@ struct ListNode* list_gotoPrev(ListNodePtr node)
     return node->prev;
 }
 
+// Not needed with front and back pointers
+/*
 // Returns the back node of the list
 struct ListNode* list_gotoBack(ListNodePtr node)
 {
@@ -174,6 +178,7 @@ struct ListNode* list_gotoFront(ListNodePtr node)
 
     return node;
 }
+*/
 
 // ListIndexShift is the value that is used to shift the list index
 // Index shifts left after removal
@@ -294,6 +299,8 @@ LinkedListPtr ll_createList(int dataBufferSize)
 
     LinkedListPtr list = malloc(sizeof(struct LinkedList));
     list->currentNode = NULL;
+    list->front = NULL;
+    list->back = NULL;
     list->listIndex = -1;
     list->listSize = 0;
     list->dataBufferSize = dataBufferSize;
@@ -371,7 +378,7 @@ void ll_gotoBack(LinkedListPtr list)
         return;
     }
 
-    list->currentNode = list_gotoBack(list->currentNode);
+    list->currentNode = list->back;
     list->listIndex = list->listSize - 1;
 }
 
@@ -384,7 +391,7 @@ void ll_gotoFront(LinkedListPtr list)
         return;
     }
 
-    list->currentNode = list_gotoFront(list->currentNode);
+    list->currentNode = list->front;
     list->listIndex = 0;
 }
 
@@ -401,6 +408,17 @@ void ll_insertAfter(LinkedListPtr list, char* newData)
     list->currentNode = list_insertAfter(list->currentNode, newData, list->dataBufferSize);
     list->listIndex += 1;
     list->listSize += 1;
+
+    // Update front and back pointers
+    if(list->listSize == 1)
+    {
+        list->front = list->currentNode;
+    }
+
+    if(list->listIndex == (list->listSize - 1))
+    {
+        list->back = list->currentNode;
+    }
 }
 
 // Inserts new node before the current node
@@ -423,6 +441,17 @@ void ll_insertBefore(LinkedListPtr list, char* newData)
 
     list->currentNode = list_insertBefore(list->currentNode, newData, list->dataBufferSize);
     list->listSize += 1;
+
+    // Update front and back pointers
+    if(list->listSize == 1)
+    {
+        list->back = list->currentNode;
+    }
+
+    if(list->listIndex == 0)
+    {
+        list->front = list->currentNode;
+    }
 }
 
 // Replace only the data in the current node
@@ -453,6 +482,8 @@ void ll_removeNode(LinkedListPtr list)
     // Empty list
     if(!list->currentNode)
     {
+        list->front = NULL;
+        list->back = NULL;
         list->listIndex = -1;
         list->listSize = 0;
         return;
@@ -461,6 +492,17 @@ void ll_removeNode(LinkedListPtr list)
     // Current index shifts toward front of list
     list->listIndex += listIndexShift;
     list->listSize -= 1;
+
+    // Update front and back pointers
+    if(list->listIndex == 0)
+    {
+        list->front = list->currentNode;
+    }
+
+    if(list->listIndex == list->listSize - 1)
+    {
+        list->back = list->currentNode;
+    }
 }
 
 // Removes the current node
@@ -473,6 +515,8 @@ void ll_deleteNode(LinkedListPtr list)
     // Empty list
     if(!list->currentNode)
     {
+        list->front = NULL;
+        list->back = NULL;
         list->listIndex = -1;
         list->listSize = 0;
         return;
@@ -481,6 +525,17 @@ void ll_deleteNode(LinkedListPtr list)
     // Current index shifts toward front only when deleting from back
     list->listIndex += listIndexShift;
     list->listSize -= 1;
+
+    // Update front and back pointers
+    if(list->listIndex == 0)
+    {
+        list->front = list->currentNode;
+    }
+
+    if(list->listIndex == list->listSize - 1)
+    {
+        list->back = list->currentNode;
+    }
 }
 
 // Return data of current node
