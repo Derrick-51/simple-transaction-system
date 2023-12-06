@@ -19,13 +19,26 @@ account , ID , branch , name , operation , amount
 typedef int (*conditionFunc)(char*, char*);
 
 
-int file_lineToString(FILE* file, char* destination)
+int file_lineToString(FILE* file, char* destination, int bufferSize)
 {
+    if(!file)
+    {
+        printf("Null file in lineToString\n");
+        return RETURN_FAILURE;
+    }
+
+    if(!destination)
+    {
+        printf("Null destination in lineToString\n");
+        return RETURN_FAILURE;
+    }
+
+    // Copy file line to buffer
     int nextChar = '\0';
-    for(int lineIdx = 0; lineIdx < LINE_BUFFER_SIZE - 1; ++lineIdx)
+    for(int lineIdx = 0; lineIdx < bufferSize - 1; ++lineIdx)
     {
         nextChar = fgetc(file);
-
+        
         if(nextChar == '\n')
         {
             destination[lineIdx] = '\0';
@@ -33,18 +46,33 @@ int file_lineToString(FILE* file, char* destination)
         }
         if(nextChar == EOF)
         {
+            destination[lineIdx] = '\0';
             return EOF;
         }
         
         destination[lineIdx] = (char)nextChar;
     }
+
+    // Null terminate buffer if buffer is too small
+    destination[bufferSize] = '\0';
+
+    // Exhauxt unfinished line if buffer is too small
+    while(nextChar != '\n')
+    {
+        nextChar = fgetc(file);
+        if(nextChar == EOF)
+        {
+            return EOF;
+        }
+    }
 }
 
-LinkedListPtr file_fileToList(char* filePath)
+int file_fileToList(char* filePath, LinkedListPtr rowList)
 {
     if(!filePath)
     {
         printf("Null file path\n");
+        return RETURN_FAILURE;
     }
 
     FILE* file = fopen(filePath, 'r');
@@ -52,19 +80,18 @@ LinkedListPtr file_fileToList(char* filePath)
     if(!file)
     {
         printf("Failed to open file\n");
+        return RETURN_FAILURE;
     }
 
-    LinkedListPtr list = ll_createList(LINE_BUFFER_SIZE);
-    char nextLine[LINE_BUFFER_SIZE];
-    
+    char nextLine = malloc(sizeof(char) * ll_getBufferSize(rowList));
     while(1)
     {
-        if(file_lineToString(file, nextLine) == EOF)
+        if(file_lineToString(file, nextLine, ll_getBufferSize(rowList)) == EOF)
         {
             break;
         }
 
-        ll_insertAfter(list, nextLine);
+        ll_insertAfter(rowList, nextLine);
     }
 }
 
