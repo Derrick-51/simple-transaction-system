@@ -18,7 +18,7 @@ account , ID , branch , name , operation , amount
 // Function needs to return 0 for failure
 typedef int (*conditionFunc)(char*, char*);
 
-
+// Copies current file line to destination as null-terminated string
 int file_lineToString(FILE* file, char* destination, int bufferSize)
 {
     if(!file)
@@ -67,6 +67,8 @@ int file_lineToString(FILE* file, char* destination, int bufferSize)
     }
 }
 
+// Imports csv file to linked list
+// Each node contains a line, with column headers in the first node
 int file_fileToList(char* filePath, LinkedListPtr rowList)
 {
     if(!filePath)
