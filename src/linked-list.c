@@ -507,6 +507,12 @@ int ll_getSize(LinkedListPtr list)
     return list->listSize;
 }
 
+// Return data buffer size
+int ll_getBufferSize(LinkedListPtr list)
+{
+    return list->dataBufferSize;
+}
+
 void ll_printListDebug(LinkedListPtr list)
 {
     printf("Previous Node: %p\nCurrent Node: %p\nNext Node: %p\n\n", list->currentNode->prev, list->currentNode, list->currentNode->next);

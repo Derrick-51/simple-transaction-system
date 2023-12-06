@@ -54,6 +54,9 @@ int ll_getIndex(LinkedListPtr list);
 // Return current size of list
 int ll_getSize(LinkedListPtr list);
 
+// Return data buffer size
+int ll_getBufferSize(LinkedListPtr list);
+
 void ll_printListDebug(LinkedListPtr list);
 
 #endif
