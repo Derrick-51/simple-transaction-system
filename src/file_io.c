@@ -45,7 +45,7 @@ int file_lineToString(FILE* file, char* destination, int bufferSize)
         if(nextChar == '\n')
         {
             destination[lineIdx] = '\0';
-            return 0;
+            return RETURN_SUCCESS;
         }
         if(nextChar == EOF)
         {
@@ -68,9 +68,12 @@ int file_lineToString(FILE* file, char* destination, int bufferSize)
             return EOF;
         }
     }
+
+    printf("ERROR: Reached end of lineToString()\n");
+    return RETURN_FAILURE;
 }
 
-// Imports csv file to linked list
+// Clears list and imports csv file to list
 // Each node contains a line, with column headers in the first node
 int file_fileToList(char* filePath, LinkedListPtr rowList)
 {
@@ -88,6 +91,8 @@ int file_fileToList(char* filePath, LinkedListPtr rowList)
         return RETURN_FAILURE;
     }
 
+    // Create nodes for file lines
+    ll_clearList(rowList);
     char nextLine = malloc(sizeof(char) * ll_getBufferSize(rowList));
     while(1)
     {
@@ -98,6 +103,7 @@ int file_fileToList(char* filePath, LinkedListPtr rowList)
 
         ll_insertAfter(rowList, nextLine);
     }
+    return RETURN_SUCCESS;
 }
 
 // Creates or clears file and moves data from list to file
