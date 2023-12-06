@@ -182,6 +182,11 @@ int file_appendListToFile(char* filePath, LinkedListPtr rowList)
     return RETURN_SUCCESS;
 }
 
+// Removes nodes that don't pass condition given
+//
+// Ex. greaterThan(columnName, target):
+// Rows that are not greater than the target in 
+// the given column are removed
 int file_filterColumnCondition(
     LinkedListPtr rowList, 
     char* columnName, 
