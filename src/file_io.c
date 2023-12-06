@@ -6,6 +6,9 @@
 #define RETURN_SUCCESS 1
 #define RETURN_FAILURE 0
 
+// List headers and 1 line
+#define MIN_LIST_SIZE 2
+
 /*
 SCHEMA:
 -------------------------------------------------
@@ -95,6 +98,82 @@ int file_fileToList(char* filePath, LinkedListPtr rowList)
 
         ll_insertAfter(rowList, nextLine);
     }
+}
+
+// Creates or clears file and moves data from list to file
+int file_listToFile(char* filePath, LinkedListPtr rowList)
+{
+    if(ll_getSize < MIN_LIST_SIZE)
+    {
+        return RETURN_FAILURE;
+    }
+
+    if(!filePath)
+    {
+        printf("Null file path\n");
+        return RETURN_FAILURE;
+    }
+
+    FILE* file = fopen(filePath, "w");
+
+    if(!file)
+    {
+        printf("Failed to open file\n");
+        return RETURN_FAILURE;
+    }
+
+    // Copy column headers without removing from list
+    ll_gotoFront(rowList);
+    fprintf(file, "%s\n", ll_getData(rowList));
+    ll_gotoNext(rowList);
+
+    // Move data from list to file
+    do
+    {
+        fprintf(file, "%s\n", ll_getData(rowList));
+        ll_deleteNode(rowList);
+    } while (ll_getSize(rowList) >= MIN_LIST_SIZE);
+
+    ll_gotoFront(rowList);
+    fclose(file);
+    return RETURN_SUCCESS;
+}
+
+// Appends list data to file
+// Only column headers are retained in list
+int file_appendListToFile(char* filePath, LinkedListPtr rowList)
+{
+    if(ll_getSize < MIN_LIST_SIZE)
+    {
+        return RETURN_FAILURE;
+    }
+
+    if(!filePath)
+    {
+        printf("Null file path\n");
+        return RETURN_FAILURE;
+    }
+
+    FILE* file = fopen(filePath, "a");
+
+    if(!file)
+    {
+        printf("Failed to open file\n");
+        return RETURN_FAILURE;
+    }
+
+    // Move data from list to file
+    ll_gotoFront(rowList);
+    ll_gotoNext(rowList); // Skip column headers
+    do
+    {
+        fprintf(file, "%s\n", ll_getData(rowList));
+        ll_deleteNode(rowList);
+    } while (ll_getSize(rowList) >= MIN_LIST_SIZE);
+
+    ll_gotoFront(rowList);
+    fclose(file);
+    return RETURN_SUCCESS;
 }
 
 int file_filterColumnCondition(
