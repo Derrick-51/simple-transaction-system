@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+#define RETURN_SUCCESS 1
+#define RETURN_FAILURE 0
+
 /*
 SCHEMA:
 -------------------------------------------------
@@ -11,6 +14,9 @@ account , ID , branch , name , operation , amount
 */
 
 #define LINE_BUFFER_SIZE 256
+
+// Function needs to return 0 for failure
+typedef int (*conditionFunc)(char*, char*);
 
 
 int file_lineToString(FILE* file, char* destination)
@@ -62,27 +68,36 @@ LinkedListPtr file_fileToList(char* filePath)
     }
 }
 
-char* file_filterLines(LinkedListPtr rowList, char* columnName, char* target)
+int file_filterColumnCondition(
+    LinkedListPtr rowList, 
+    char* columnName, 
+    char* target, 
+    conditionFunc conditionFunc)
 {
+    if(ll_getSize(rowList) < 2)
+    {
+        printf("Cannot filter empty list\n");
+        return RETURN_FAILURE;
+    }
 
-}
+    // Skip header row
+    ll_gotoFront(rowList);
+    ll_gotoNext(rowList);
 
-char* file_findAccountLines(LinkedListPtr list, char* searchTarget)
-{
+    while(ll_getIndex(rowList) < ll_getSize(rowList))
+    {
+        char* currentLine = ll_getData(rowList);
 
-}
+        if(conditionFunc(columnName, target))
+        {
+            ll_gotoNext(rowList);
+        }
+        else
+        {
+            ll_deleteNode(rowList);
+        }
+    }
 
-char* file_findBranchLines(LinkedListPtr list, char* searchTarget)
-{
-
-}
-
-char* file_findNameLines(LinkedListPtr list, char* searchTarget)
-{
-
-}
-
-char* file_findOperationLines(LinkedListPtr list, char* searchTarget)
-{
-
+    ll_gotoFront(rowList);
+    return RETURN_SUCCESS;
 }
